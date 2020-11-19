@@ -1,5 +1,5 @@
 import os
-
+from . import main  
 from flask import Flask, redirect, url_for
 
 
@@ -23,6 +23,9 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
+
+    app.register_blueprint(main.bp)
+    
 
     @app.route('/')
     def hello():
