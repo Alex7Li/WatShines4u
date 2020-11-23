@@ -3,14 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Wat Shines 4 You?</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='/style.css') }}" />
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='/style.css') }}"/>
+    <!-- https://www.blazeui.com -->
+    <link rel="stylesheet" href="https://unpkg.com/@blaze/css@9.2.0/dist/blaze/blaze.css">
 </head>
 <body>
-<main>
-    <p>
-        Hello we are testing
-    </p>
-</main>
+        <main class="c-card">
+            <header class="c-card__header">
+                <h2 class="c-heading">
+                    Wat shines for you?
+                    <div class="c-heading__sub">Find your perfect match!</div>
+                </h2>
+            </header>
+            <div class="c-card__body">
+            <ul class="o-timeline">
+              <li class="c-timeline-item c-timeline-item--brand">
+                <div class="c-timeline-item__body">
+                    {% include 'describe.html' %}
+                </div>
+              </li>
+            <li class="c-timeline-item c-timeline-item--info">
+                <div class="c-timeline-item__body">
+                    {% include 'selection.html' %}
+                </div>
+            </li>
+                <li class="c-timeline-item c-timeline-item--warning">
+                    <div class="c-timeline-item__body">
+                        <span class="c-paragraph">Go on your date!</span>
+                    </div>
+                </li>
+                <li class="c-timeline-item c-timeline-item--success c-timeline-item--last">
+                    <div class="c-timeline-item__body">
+                        {% include 'review.html' %}
+                    </div>
+                </li>
+            </ul>
+            </div>
+        </main>
 </body>
 </html>
