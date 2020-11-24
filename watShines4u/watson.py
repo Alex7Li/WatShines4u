@@ -2,8 +2,8 @@
 Wrapper for IBM Watson service.
 """
 
-import operator
 import os
+from typing import List, Tuple
 
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson import DiscoveryV1
@@ -19,9 +19,11 @@ discovery = DiscoveryV1(version=version, authenticator=authenticator)
 discovery.set_service_url(service_url)
 
 
-def get_reviews(query: str):
+def get_reviews(query: str) -> List[Tuple[str, str, List[str], List[str]]]:
     """
     Get reviews for dates given a query from Watson.
+
+    Returns a list of (review text, name, [keywords], [categories])
     """
     reqd_fields = "name, text, enriched_text"
     count = 10
