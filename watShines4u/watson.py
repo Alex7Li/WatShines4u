@@ -58,7 +58,9 @@ def get_reviews(query: str) -> List[Tuple[str, str, List[str], List[str]]]:
             ]
 
             # remove categories in dating
-            categories = [cat for cat in categories if cat.lower() not in ["dating"]]
+            categories = [
+                cat for cat in categories if cat.lower() not in ["dating", "society"]
+            ]
 
             keywords = []
             for keyword in result["enriched_text"]["keywords"]:
