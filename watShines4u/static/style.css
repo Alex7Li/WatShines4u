@@ -1,1 +1,17 @@
 html { font-family: sans-serif; background: #eee; padding: 2rem; }
+
+div.date-option-holder > div.date-option:nth-of-type(odd){
+    padding: 5px;
+    background-color: #ede;
+}
+
+div.date-option-holder > div.date-option:nth-of-type(even){
+    padding: 5px;
+    background-color: #ccf;
+}
+
+.profile_image {
+   width: 50px;
+    height: 50px;
+    float: left;
+}
