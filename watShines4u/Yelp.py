@@ -132,22 +132,27 @@ def query_api(term, location):
     response = get_business(API_KEY, business_id)
 
     print(u'Result for business "{0}" found:'.format(business_id))
-    pprint.pprint(response, indent=2)
+    # pprint.pprint(response, indent=2)
+    return response
+
+# Format response from Yelp to send over to the frontend
+def business_for_frontend(response):
+    business_dict = {
+        "name": response["name"],
+        "image_url": response["image_url"],
+        "phone_number": response["display_phone"],
+        "address": response["location"],
+        "business_link_to_yelp": response["url"]
+    }
+
+    return business_dict
 
 
 def main():
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('-q', '--term', dest='term', default=DEFAULT_TERM,
-                        type=str, help='Search term (default: %(default)s)')
-    parser.add_argument('-l', '--location', dest='location',
-                        default=DEFAULT_LOCATION, type=str,
-                        help='Search location (default: %(default)s)')
-
-    input_values = parser.parse_args()
-
     try:
-        query_api(input_values.term, input_values.location)
+        response_from_yelp = query_api("traveling with kids", "Columbus")
+        data_from_frontend = business_for_frontend(response_from_yelp)
+        print(data_from_frontend)
     except HTTPError as error:
         sys.exit(
             'Encountered HTTP error {0} on {1}:\n {2}\nAbort program.'.format(
