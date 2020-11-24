@@ -1,3 +1,4 @@
 set FLASK_APP=watShines4u
 set FLASK_ENV=development
 set SECRET_KEY=dev
+set DISCOVERY_API_KEY=L8vZ5k9U8L8r8r9YstxDbOml0imvZBYmj7bB_tiVQ2GS
