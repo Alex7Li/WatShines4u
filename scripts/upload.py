@@ -16,8 +16,8 @@ discovery = DiscoveryV1(version="2019-04-30", authenticator=authenticator)
 discovery.set_service_url(service_url)
 
 
-def upload():
-    with open("date-reviews.csv") as file:
+def upload() -> None:
+    with open("data/date-reviews.csv") as file:
         reader = csv.reader(file)
 
         next(reader)  # skips headers
