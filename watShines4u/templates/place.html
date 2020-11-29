@@ -1,33 +1,21 @@
 <span class="c-paragraph">Customized Date Idea</span>
 
-    <div role="menu" class="c-card__body date-option-holder">
-
+<div role="menu" class="c-card__body date-option-holder">
     <!-- Date Idea-->
     <div class="o-grid o-grid--demo">
-        <div class="o-grid__cell">
-            <div class="place-pic">
-                <a href="https://www.yelp.com/biz/cosi-columbus-6?adjust_creative=Ge_k4rixFmx8cwpivm0_VQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_lookup&utm_source=Ge_k4rixFmx8cwpivm0_VQ" target="_blank">
-                    <img width="220" height="120" src="https://s3-media4.fl.yelpcdn.com/bphoto/4U6hz0d0aW9sYAxumwYsZA/o.jpg"/>
-                </a>
-            </div>
-            <div class="place-name">COSI</div>
-        </div>
-        <div class="o-grid__cell">
-            <div class="place-pic">
-                <a href="https://www.yelp.com/biz/cosi-columbus-6?adjust_creative=Ge_k4rixFmx8cwpivm0_VQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_lookup&utm_source=Ge_k4rixFmx8cwpivm0_VQ" target="_blank">
-                    <img width="220" height="120" src="https://s3-media3.fl.yelpcdn.com/bphoto/2QGmeblqy2wtjMO8wvy3Sg/o.jpg"/>
-                </a>
-            </div>
-            <div class="place-name">Place2</div>
-        </div>
-        <div class="o-grid__cell">
-            <div class="place-pic">
-                <a href="https://www.yelp.com/biz/cosi-columbus-6?adjust_creative=Ge_k4rixFmx8cwpivm0_VQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_lookup&utm_source=Ge_k4rixFmx8cwpivm0_VQ" target="_blank">
-                    <img width="220" height="120" src="https://s3-media4.fl.yelpcdn.com/bphoto/wTFIyYKpw6axTTML_WxUWg/o.jpg"/>
-                </a>
-            </div>
-            <div class="place-name">Place3</div>
+        {% for place in placeOptions %}
+        <div class="date-option {{'selected-date' if 'selected' in place else ''}}">
+            <div class="o-grid__cell">
+                <div class="place-pic">
+                    <a href="{{place.link}}" target="_blank">
+                        <img width="220" height="120" src="{{place.imageurl}}"/>
+                    </a>
+                </div>
+                <form action= "/initial/" method= "post">
+                    <input type="submit" role="menuitem" name="date" class="c-card__control" value="Choose {{place.name}}">
+                </form>
             </div>
         </div>
-    </div> 
+        {% endfor %}
     </div>
+</div>

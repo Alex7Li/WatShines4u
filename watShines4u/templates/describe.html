@@ -1,11 +1,15 @@
 <span class="c-paragraph">Describe your ideal date</span>
 <label class="c-label c-field--icon-right c-card__body">
-    <div class="c-input-group">
-        <div class="o-field">
-            <input class="c-field" placeholder="Description goes here...">
-            <span role="tooltip" class="c-hint">Do you like the studious type, or only the adventurous?</span>
-        </div>
-        <button class="c-button c-button--brand">Match me!</button>
-    </div>
+        <form action= "/initial/" method ="post">
+            <div class="c-input-group c-input-group--rounded-right">
+                <div class="o-field">
+                    <input name="description" class="c-field" placeholder="Description goes here...">
+                    <span role="tooltip" class="c-hint">Do you like the studious type, or only the adventurous?</span>
+                </div>
+                <div class="o-field">
+                    <input type="submit" name="match" class="c-button c-button--info" value="Match me!">
+                </div>
+            </div>
+        </form>
 </label>
 

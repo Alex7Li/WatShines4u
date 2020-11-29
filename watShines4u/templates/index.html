@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Wat Shines 4 You?</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='/style.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}"/>
     <!-- https://www.blazeui.com -->
-    <link rel="stylesheet" href="https://unpkg.com/@blaze/css@9.2.0/dist/blaze/blaze.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@blaze/css@9.2.0/dist/blaze/blaze.css">
 </head>
 <body>
         <main class="c-card">
@@ -16,33 +16,45 @@
                 </h2>
             </header>
             <div class="c-card__body">
-            <ul class="o-timeline">
-              <li class="c-timeline-item c-timeline-item--brand">
-                <div class="c-timeline-item__body">
-                    {% include 'describe.html' %}
-                </div>
-              </li>
-            <li class="c-timeline-item c-timeline-item--info">
-                <div class="c-timeline-item__body">
-                    {% include 'selection.html' %}
-                </div>
-            </li>
-            <li class="c-timeline-item c-timeline-item--error">
-                <div class="c-timeline-item__body">
-                    {% include 'place.html' %}
-                </div>
-            </li>
-                <li class="c-timeline-item c-timeline-item--warning">
-                    <div class="c-timeline-item__body">
-                        <span class="c-paragraph">Go on your date!</span>
-                    </div>
-                </li>
-                <li class="c-timeline-item c-timeline-item--success c-timeline-item--last">
-                    <div class="c-timeline-item__body">
-                        {% include 'review.html' %}
-                    </div>
-                </li>
-            </ul>
+                <ul class="o-timeline">
+                    <li class="c-timeline-item c-timeline-item--brand">
+                        <div class="c-timeline-item__body">
+                            {% include 'describe.html' %}
+                        </div>
+                    </li>
+                    {% if stage > 1 %}
+                    <li class="c-timeline-item c-timeline-item--info">
+                      <div class="c-timeline-item__body">
+                          {% include 'selection.html' %}
+                      </div>
+                    </li>
+                    {% endif %}
+                    {% if stage > 2 %}
+                    <li class="c-timeline-item c-timeline-item--error">
+                        <div class="c-timeline-item__body">
+                        {% include 'place.html' %}
+                        </div>
+                    </li>
+                    {% endif %}
+                    {% if stage > 3 %}
+                    <li class="c-timeline-item c-timeline-item--warning">
+                        <div class="c-timeline-item__body">
+                            <span class="c-paragraph">Go on your date!</span>
+                            <span class="c-paragraph">How to contact your date: {{selected_date.contact_info if selected_date else "How are you reading this"}}</span>
+                            <form action= "/initial/" method="post">
+                                <input type="submit" name="review" class="c-button c-button--block u-medium c-button--brand" value="Date Complete!">
+                            </form>
+                        </div>
+                    </li>
+                    {% endif %}
+                    {% if stage > 4 %}
+                    <li class="c-timeline-item c-timeline-item--success c-timeline-item--last">
+                        <div class="c-timeline-item__body">
+                            {% include 'review.html' %}
+                        </div>
+                    </li>
+                    {% endif %}
+                </ul>
             </div>
         </main>
 </body>

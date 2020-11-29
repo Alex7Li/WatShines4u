@@ -1,12 +1,14 @@
 html { font-family: sans-serif; background: #eee; padding: 2rem; }
 
-div.date-option-holder > div.date-option:nth-of-type(odd){
+.date-option-holder {
     padding: 5px;
+}
+
+.date-option-holder > div.date-option:nth-of-type(odd){
     background-color: #ede;
 }
 
-div.date-option-holder > div.date-option:nth-of-type(even){
-    padding: 5px;
+.date-option-holder > div.date-option:nth-of-type(even){
     background-color: #ccf;
 }
 
@@ -14,4 +16,9 @@ div.date-option-holder > div.date-option:nth-of-type(even){
    width: 50px;
     height: 50px;
     float: left;
+}
+
+div.selected-date {
+    border: 5px;
+    border-style: double;
 }
