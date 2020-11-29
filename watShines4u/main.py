@@ -69,13 +69,16 @@ def select(array, name):
     the given name, and make the others not selected.
     Returns the selected element
     """
+    selected = None
     for x in array:
         if x['name'] == name:
             x['selected'] = 'Yup'
-            return x
+            selected = x
         else:
             x.pop('selected', None)
-    raise AssertionError(f"No element x with x['name']={name} was not in the array {array}.")
+    if selected is None:
+        raise AssertionError(f"No element x with x['name']={name} was not in the array {array}.")
+    return selected
 
 
 def get_places():
