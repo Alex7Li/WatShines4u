@@ -3,7 +3,8 @@ from typing import Any
 from flask import (
     Blueprint,
     render_template,
-    request
+    request,
+    session,
 )
 
 bp = Blueprint('main', __name__, url_prefix='/initial')
@@ -31,10 +32,7 @@ def initial() -> Any:
             name = request.form['place'][7:]
             stage = 3
             selected_date = select(dateOptions, name)
-            '''
-            TODO get actual places
-            '''
-            placeOptions = get_places()
+            placeOptions = get_places(selected_date['categories'])
             placeOptions.append({
                 'link': 'https://smartcouples.ifas.ufl.edu/dating/having-fun-and-staying-close/101-fun-dating-ideas/',
                 'imageurl': '../static/lightbulb.jpg',
@@ -81,11 +79,12 @@ def select(array, name):
     return selected
 
 
-def get_places():
+def get_places(categories):
     """
     Returns a list of ~3 places {name, photo_link, web_url}?
     TODO: This sample data should be replaced with a real API call!
     """
+    print(categories)
     return [{
         'link': 'https://www.yelp.com/biz/cosi-columbus-6?adjust_creative=Ge_k4rixFmx8cwpivm0_VQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_lookup&utm_source=Ge_k4rixFmx8cwpivm0_VQ',
         'imageurl': 'https://s3-media4.fl.yelpcdn.com/bphoto/4U6hz0d0aW9sYAxumwYsZA/o.jpg',
@@ -103,12 +102,15 @@ def get_date_options(description):
     Get options for a date
     TODO: This sample data should be replaced with a real API call!
     """
+
     return [{
         'name': 'Kat',
-        'review': 'We met for coffee at Fox in the Snow Cafe.She had a nice and bubbly personality. '
-                  'She talked a lot about politics and and her major whuch was Civil Engineering. '
+        'review': 'We met for coffee at Fox in the Snow Cafe. She had a nice and bubbly personality. '
+                  'She talked a lot about politics and and her major which was Civil Engineering. '
                   'Overall, she seemed like an interesting person with a good sense of humor.',
         'contact_info': 'Call me at 1-800-GET-DATE',
+        'keywords': ['cat', 'girl'],
+        'categories': ['man'],
     }, {
         'name': 'Handsome',
         'review':
@@ -117,6 +119,8 @@ def get_date_options(description):
             'He also seemed very passionate about his career goals and his family. '
             'Would definitely like to have another date with him.',
         'contact_info': 'Go to the mountains and scream my name',
+        'keywords': ['man'],
+        'categories': ['man'],
     }]
 
 
