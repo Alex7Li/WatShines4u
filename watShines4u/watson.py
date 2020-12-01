@@ -72,7 +72,7 @@ def get_matches(query: str) -> List[Person]:
         keywords = [words for _, words in sorted(keywords, reverse=True)]
 
         review = {
-            "description": result["text"],
+            "review": result["text"],
             "name": result["name"],
             "keywords": keywords,
             "categories": filtered_categories,
