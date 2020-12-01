@@ -1,10 +1,10 @@
 from typing import Any
+import hashlib
 
 from flask import (
     Blueprint,
     render_template,
     request,
-    session,
 )
 
 bp = Blueprint('main', __name__, url_prefix='/initial')
@@ -33,6 +33,8 @@ def initial() -> Any:
             stage = 3
             selected_date = select(dateOptions, name)
             placeOptions = get_places(selected_date['categories'])
+            if 'contact_info' not in selected_date:
+                selected_date['contact_info'] = get_contact(selected_date['name'])
             placeOptions.append({
                 'link': 'https://smartcouples.ifas.ufl.edu/dating/having-fun-and-staying-close/101-fun-dating-ideas/',
                 'imageurl': '../static/lightbulb.jpg',
@@ -52,6 +54,10 @@ def initial() -> Any:
                 add_review(person, request.form['user_review'])
     return render_template('index.html', stage=stage, dateOptions=dateOptions,
                            placeOptions=placeOptions, selected_date=selected_date)
+
+
+def get_contact(name):
+    return "Call me! My number is 614" + "-" + str((hash(name)*43) % 1000) + "-" + str(hash(name) % 10000)
 
 
 def get_selected(array):
@@ -108,7 +114,6 @@ def get_date_options(description):
         'review': 'We met for coffee at Fox in the Snow Cafe. She had a nice and bubbly personality. '
                   'She talked a lot about politics and and her major which was Civil Engineering. '
                   'Overall, she seemed like an interesting person with a good sense of humor.',
-        'contact_info': 'Call me at 1-800-GET-DATE',
         'keywords': ['cat', 'girl'],
         'categories': ['man'],
     }, {
