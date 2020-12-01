@@ -74,7 +74,7 @@ def request(host, path, api_key, url_params=None):
         'Authorization': 'Bearer %s' % api_key,
     }
 
-    print(u'Querying {0} ...'.format(url))
+    # print(u'Querying {0} ...'.format(url))
 
     response = requests.request('GET', url, headers=headers, params=url_params)
 
@@ -124,25 +124,26 @@ def query_api(term, location):
         print(u'No businesses for {0} in {1} found.'.format(term, location))
         return
 
-    business_id = businesses[0]['id']
+    # Get first 3 businesses from results
+    business_id1 = businesses[0]['id']
+    business_id2 = businesses[1]['id']
+    business_id3 = businesses[2]['id']
 
-    print(u'{0} businesses found, querying business info ' \
-        'for the top result "{1}" ...'.format(
-            len(businesses), business_id))
-    response = get_business(API_KEY, business_id)
+    response1 = get_business(API_KEY, business_id1)
+    response2 = get_business(API_KEY, business_id2)
+    response3 = get_business(API_KEY, business_id3)
 
-    print(u'Result for business "{0}" found:'.format(business_id))
     # pprint.pprint(response, indent=2)
-    return response
+    return [response1, response2, response3]
 
 # Format response from Yelp to send over to the frontend
-def business_for_frontend(response):
+def business_formatter_for_frontend(response):
     business_dict = {
         "name": response["name"],
         "image_url": response["image_url"],
         "phone_number": response["display_phone"],
         "address": response["location"],
-        "business_link_to_yelp": response["url"]
+        "link": response["url"]
     }
 
     return business_dict
@@ -151,7 +152,7 @@ def business_for_frontend(response):
 def main():
     try:
         response_from_yelp = query_api("traveling with kids", "Columbus")
-        data_from_frontend = business_for_frontend(response_from_yelp)
+        data_from_frontend = business_formatter_for_frontend(response_from_yelp)
         print(data_from_frontend)
     except HTTPError as error:
         sys.exit(

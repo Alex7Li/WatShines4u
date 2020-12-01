@@ -1,4 +1,6 @@
 from typing import Any
+from .watson import get_matches
+from .Yelp import business_formatter_for_frontend, query_api
 
 from flask import (
     Blueprint,
@@ -82,42 +84,34 @@ def select(array, name):
 
 
 def get_places():
-    """
-    Returns a list of ~3 places {name, photo_link, web_url}?
-    TODO: This sample data should be replaced with a real API call!
-    """
-    return [{
-        'link': 'https://www.yelp.com/biz/cosi-columbus-6?adjust_creative=Ge_k4rixFmx8cwpivm0_VQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_lookup&utm_source=Ge_k4rixFmx8cwpivm0_VQ',
-        'imageurl': 'https://s3-media4.fl.yelpcdn.com/bphoto/4U6hz0d0aW9sYAxumwYsZA/o.jpg',
-        'name': 'COSI',
-    }, {
-        'link': 'https://www.yelp.com/biz/cosi-columbus-6?adjust_creative=Ge_k4rixFmx8cwpivm0_VQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_lookup&utm_source=Ge_k4rixFmx8cwpivm0_VQ',
-        'imageurl': 'https://s3-media3.fl.yelpcdn.com/bphoto/2QGmeblqy2wtjMO8wvy3Sg/o.jpg',
-        'name': 'Place2',
-    }
-    ]
+    # TODO: How do we get the right query?
+    response = query_api("gaming bars", "Columbus")
+
+    places = []
+
+    for place in response:
+        formatted_place = business_formatter_for_frontend(place)
+        places.append(formatted_place)
+
+    return places
 
 
 def get_date_options(description):
-    """
-    Get options for a date
-    TODO: This sample data should be replaced with a real API call!
-    """
-    return [{
-        'name': 'Kat',
-        'review': 'We met for coffee at Fox in the Snow Cafe.She had a nice and bubbly personality. '
-                  'She talked a lot about politics and and her major whuch was Civil Engineering. '
-                  'Overall, she seemed like an interesting person with a good sense of humor.',
-        'contact_info': 'Call me at 1-800-GET-DATE',
-    }, {
-        'name': 'Handsome',
-        'review':
-            'Met up with him for drinks and dinner.He was funny and cute. '
-            'I was laughing throughout the date and had a great time. '
-            'He also seemed very passionate about his career goals and his family. '
-            'Would definitely like to have another date with him.',
-        'contact_info': 'Go to the mountains and scream my name',
-    }]
+    all_dates = []
+
+    # API call to Watson to get possible dates
+    reviews = get_matches(description)
+
+    # Format data for frontend
+    for date_option in reviews:
+        date = {
+            'name': date_option['name'],
+            'review': date_option['description']
+        }
+
+        all_dates.append(date)
+
+    return all_dates
 
 
 def add_review(person, review: str):
@@ -126,3 +120,10 @@ def add_review(person, review: str):
     TODO: Make a real API call!
     """
     pass
+
+def main():
+    d = get_date_options("someone who I can get drinks with")
+    print(d)
+
+if __name__ == '__main__':
+    main()
