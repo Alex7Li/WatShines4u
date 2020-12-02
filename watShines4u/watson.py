@@ -97,7 +97,7 @@ def add_document(doc: Dict[str, Any]) -> None:
         os.remove(tmp_name)
 
 
-def add_review(review: str, person_reviewed: Person) -> None:
+def add_date_review(review: str, person_reviewed: Person) -> None:
     """
     Given a review and a person being reviewed, this function adds the review to the database.
     Example:
@@ -108,5 +108,4 @@ def add_review(review: str, person_reviewed: Person) -> None:
     assert set(person_reviewed.keys()) == set(
         ["name", "text"]
     ), "only 'name' is allowed in person."
-
     add_document(person_reviewed)

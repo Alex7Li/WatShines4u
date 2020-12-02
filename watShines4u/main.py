@@ -1,6 +1,7 @@
 from typing import Any
 import hashlib
-
+from .watson import get_matches, add_date_review
+from .Yelp import business_formatter_for_frontend, query_api
 from flask import (
     Blueprint,
     render_template,
@@ -51,7 +52,7 @@ def initial() -> Any:
             elif 'done' in request.form:
                 stage = 1
                 person = get_selected(dateOptions)
-                add_review(person, request.form['user_review'])
+                add_review({"name": person["name"]}, request.form['user_review'])
     return render_template('index.html', stage=stage, dateOptions=dateOptions,
                            placeOptions=placeOptions, selected_date=selected_date)
 
@@ -86,52 +87,23 @@ def select(array, name):
 
 
 def get_places(categories):
-    """
-    Returns a list of ~3 places {name, photo_link, web_url}?
-    TODO: This sample data should be replaced with a real API call!
-    """
-    print(categories)
-    return [{
-        'link': 'https://www.yelp.com/biz/cosi-columbus-6?adjust_creative=Ge_k4rixFmx8cwpivm0_VQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_lookup&utm_source=Ge_k4rixFmx8cwpivm0_VQ',
-        'imageurl': 'https://s3-media4.fl.yelpcdn.com/bphoto/4U6hz0d0aW9sYAxumwYsZA/o.jpg',
-        'name': 'COSI',
-    }, {
-        'link': 'https://www.yelp.com/biz/cosi-columbus-6?adjust_creative=Ge_k4rixFmx8cwpivm0_VQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_lookup&utm_source=Ge_k4rixFmx8cwpivm0_VQ',
-        'imageurl': 'https://s3-media3.fl.yelpcdn.com/bphoto/2QGmeblqy2wtjMO8wvy3Sg/o.jpg',
-        'name': 'Place2',
-    }
-    ]
+
+    response = query_api(categories[0], "Columbus")
+
+    places = []
+
+    for place in response:
+        formatted_place = business_formatter_for_frontend(place)
+        places.append(formatted_place)
+
+    return places
 
 
 def get_date_options(description):
-    """
-    Get options for a date
-    TODO: This sample data should be replaced with a real API call!
-    """
 
-    return [{
-        'name': 'Kat',
-        'review': 'We met for coffee at Fox in the Snow Cafe. She had a nice and bubbly personality. '
-                  'She talked a lot about politics and and her major which was Civil Engineering. '
-                  'Overall, she seemed like an interesting person with a good sense of humor.',
-        'keywords': ['cat', 'girl'],
-        'categories': ['man'],
-    }, {
-        'name': 'Handsome',
-        'review':
-            'Met up with him for drinks and dinner.He was funny and cute. '
-            'I was laughing throughout the date and had a great time. '
-            'He also seemed very passionate about his career goals and his family. '
-            'Would definitely like to have another date with him.',
-        'contact_info': 'Go to the mountains and scream my name',
-        'keywords': ['man'],
-        'categories': ['man'],
-    }]
+    return get_matches(description)
 
 
 def add_review(person, review: str):
-    """
-    Add a review to the database
-    TODO: Make a real API call!
-    """
-    pass
+
+    add_date_review(review, person)
