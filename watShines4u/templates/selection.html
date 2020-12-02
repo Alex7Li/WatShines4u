@@ -8,7 +8,10 @@
                 <img class="c-avatar__img" alt="a profile image" src="../static/profile_image.jpg">
             </div>
             <div class="c-paragraph date-option-header">Selected Review:</div>
-            <div class="c-paragraph">{{date.review}}</div>
+            <div class="c-paragraph">
+                {{date.review}} 
+                <b>{{date.keywords}}</b>
+            </div>
             <form action= "/initial/" method= "post">
                 <input type="submit" role="menuitem" name="place" class="c-card__control" value="Choose {{date.name}}">
             </form>
