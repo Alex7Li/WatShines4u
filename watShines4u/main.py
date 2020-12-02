@@ -1,14 +1,11 @@
 from typing import Any
 import hashlib
+import re
 from .watson import get_matches, add_date_review
 from .Yelp import business_formatter_for_frontend, query_api
-from flask import (
-    Blueprint,
-    render_template,
-    request,
-)
+from flask import Blueprint, render_template, request, Markup
 
-bp = Blueprint('main', __name__, url_prefix='/initial')
+bp = Blueprint("main", __name__, url_prefix="/initial")
 
 # Having global variables is way simpler than dealing with a database or whatever,
 # though there are some issues with refreshes
@@ -16,56 +13,70 @@ dateOptions = []
 placeOptions = []
 selected_date = None
 
-@bp.route('/', methods=['GET', 'POST'])
+
+@bp.route("/", methods=["GET", "POST"])
 def initial() -> Any:
     global dateOptions
     global placeOptions
     global selected_date
     stage = 1
-    if 'match' in request.form:
+    if "match" in request.form:
         stage = 2
-        dateOptions = get_date_options(request.form['description'])
+        dateOptions = get_date_options(request.form["description"])
     # Check that dateOptions isn't empty, sometimes refreshing messes us up
     if len(dateOptions) > 0:
         # The name is the end of the value option of the field from the form,
         # the value is Choose {{name}} because it propagates to the frontend.
-        if 'place' in request.form:
-            name = request.form['place'][7:]
+        if "place" in request.form:
+            name = request.form["place"][7:]
             stage = 3
             selected_date = select(dateOptions, name)
-            placeOptions = get_places(selected_date['categories'])
-            if 'contact_info' not in selected_date:
-                selected_date['contact_info'] = get_contact(selected_date['name'])
-            placeOptions.append({
-                'link': 'https://smartcouples.ifas.ufl.edu/dating/having-fun-and-staying-close/101-fun-dating-ideas/',
-                'imageurl': '../static/lightbulb.jpg',
-                'name': 'your own idea!',
-            })
+            placeOptions = get_places(selected_date["categories"])
+            if "contact_info" not in selected_date:
+                selected_date["contact_info"] = get_contact(selected_date["name"])
+            placeOptions.append(
+                {
+                    "link": "https://smartcouples.ifas.ufl.edu/dating/having-fun-and-staying-close/101-fun-dating-ideas/",
+                    "imageurl": "../static/lightbulb.jpg",
+                    "name": "your own idea!",
+                }
+            )
         # Check that placeOptions isn't empty, sometimes refreshing messes us up
         if len(placeOptions) > 0:
-            if 'date' in request.form:
+            if "date" in request.form:
                 stage = 4
-                place = request.form['date'][7:]
+                place = request.form["date"][7:]
                 select(placeOptions, place)
-            elif 'review' in request.form:
+            elif "review" in request.form:
                 stage = 5
-            elif 'done' in request.form:
+            elif "done" in request.form:
                 stage = 1
                 person = get_selected(dateOptions)
-                add_review({"name": person["name"]}, request.form['user_review'])
-    return render_template('index.html', stage=stage, dateOptions=dateOptions,
-                           placeOptions=placeOptions, selected_date=selected_date)
+                add_review({"name": person["name"]}, request.form["user_review"])
+    return render_template(
+        "index.html",
+        stage=stage,
+        dateOptions=dateOptions,
+        placeOptions=placeOptions,
+        selected_date=selected_date,
+    )
 
 
 def get_contact(name):
-    return "Call me! My number is 614" + "-" + str((hash(name)*43) % 1000) + "-" + str(hash(name) % 10000)
+    return (
+        "Call me! My number is 614"
+        + "-"
+        + str((hash(name) * 43) % 1000)
+        + "-"
+        + str(hash(name) % 10000)
+    )
 
 
 def get_selected(array):
     """
     Get the selected element of an array
     """
-    return next(x for x in array if 'selected' in x)
+    return next(x for x in array if "selected" in x)
 
 
 def select(array, name):
@@ -76,13 +87,15 @@ def select(array, name):
     """
     selected = None
     for x in array:
-        if x['name'] == name:
-            x['selected'] = 'Yup'
+        if x["name"] == name:
+            x["selected"] = "Yup"
             selected = x
         else:
-            x.pop('selected', None)
+            x.pop("selected", None)
     if selected is None:
-        raise AssertionError(f"No element x with x['name']={name} was not in the array {array}.")
+        raise AssertionError(
+            f"No element x with x['name']={name} was not in the array {array}."
+        )
     return selected
 
 
@@ -100,8 +113,23 @@ def get_places(categories):
 
 
 def get_date_options(description):
+    options = []
 
-    return get_matches(description)
+    for person in get_matches(description):
+        highlight_pattern = "(" + "|".join(person["keywords"]) + ")"
+
+        # atrocious hack, incredibly unsafe. Never do this in production.
+        person["highlighted_review"] = Markup(
+            re.sub(
+                highlight_pattern,
+                r"<b>\1</b>",  # allows users to submit unescaped html :(
+                person["review"],
+            )
+        )
+
+        options.append(person)
+
+    return options
 
 
 def add_review(person, review: str):

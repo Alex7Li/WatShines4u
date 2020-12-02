@@ -8,10 +8,10 @@
             <div class="o-grid__cell">
                 <div class="place-pic">
                     <a href="{{place.link}}" target="_blank">
-                        <img width="220" height="120" src="{{place.imageurl}}"/>
+                        <img style="object-fit: cover; width: 220px; height: 120px;" src="{{place.imageurl}}"/>
                     </a>
                 </div>
-                <form action= "/initial/" method= "post">
+                <form action= "/initial/" method= "post" style="width: 220px">
                     <input type="submit" role="menuitem" name="date" class="c-card__control" value="Choose {{place.name}}">
                 </form>
             </div>
