@@ -121,28 +121,21 @@ def query_api(term, location):
     businesses = response.get('businesses')
 
     if not businesses:
-        print(u'No businesses for {0} in {1} found.'.format(term, location))
-        return
+        business_ids = ["condado-tacos-short-north-columbus"]
+    else:
+        business_ids = [business['id'] for business in businesses]
 
-    business_id = businesses[0]['id']
-
-    print(u'{0} businesses found, querying business info ' \
-        'for the top result "{1}" ...'.format(
-            len(businesses), business_id))
-    response = get_business(API_KEY, business_id)
-
-    print(u'Result for business "{0}" found:'.format(business_id))
-    # pprint.pprint(response, indent=2)
+    response = [get_business(API_KEY,business_id) for business_id in business_ids]
     return response
 
 # Format response from Yelp to send over to the frontend
-def business_for_frontend(response):
+def business_formatter_for_frontend(response):
     business_dict = {
         "name": response["name"],
-        "image_url": response["image_url"],
+        "imageurl": response["image_url"],
         "phone_number": response["display_phone"],
         "address": response["location"],
-        "business_link_to_yelp": response["url"]
+        "link": response["url"]
     }
 
     return business_dict
@@ -151,7 +144,7 @@ def business_for_frontend(response):
 def main():
     try:
         response_from_yelp = query_api("traveling with kids", "Columbus")
-        data_from_frontend = business_for_frontend(response_from_yelp)
+        data_from_frontend = business_formatter_for_frontend(response_from_yelp)
         print(data_from_frontend)
     except HTTPError as error:
         sys.exit(
