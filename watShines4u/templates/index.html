@@ -39,7 +39,9 @@
                     {% if stage > 3 %}
                     <li class="c-timeline-item c-timeline-item--warning">
                         <div class="c-timeline-item__body">
-                            <span class="c-paragraph">Go on your date!</span>
+                            <span class="c-paragraph">Go on your date!</br></span>
+                            <div role="menu" class="c-card__body date-option-holder"></div>
+
                             <span class="c-paragraph">How to contact your date: {{selected_date.contact_info if selected_date else "How are you reading this"}}</span>
                             <form action= "/initial/" method="post">
                                 <input type="submit" name="review" class="c-button c-button--block u-medium c-button--brand" value="Date Complete!">
