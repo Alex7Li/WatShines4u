@@ -88,13 +88,14 @@ def add_document(doc: Dict[str, Any]) -> None:
     with open(tmp_name, "w+") as fp:
         json.dump(doc, fp)
         fp.seek(0)
+        added = 0
         added = discovery.add_document(
             environment_id, collection_id, file=fp
         ).get_result()
         assert added is not None
         assert not isinstance(added, Exception)
 
-        os.remove(tmp_name)
+    os.remove(tmp_name)
 
 
 def add_date_review(review: str, person_reviewed: Person) -> None:
